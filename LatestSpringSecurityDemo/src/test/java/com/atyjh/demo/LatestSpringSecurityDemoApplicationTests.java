@@ -1,5 +1,8 @@
 package com.atyjh.demo;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSON;
+import com.atyjh.demo.entity.LoginUser;
 import com.atyjh.demo.utils.JwtHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +37,10 @@ class LatestSpringSecurityDemoApplicationTests {
 
     @Test
     void test2() {
-//        Long userId = JwtHelper.getUserId("123456.123.46465");
+        String value = redisTemplate.opsForValue().get("LOGIN:1");
+        System.out.println(value);
+        LoginUser loginUser = JSON.parseObject(value, LoginUser.class);
+        System.out.println(loginUser);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.atyjh.demo.config;
 
 import com.atyjh.demo.filter.JwtAuthenticationTokenFilter;
+import com.atyjh.demo.handler.AccessDeniedHandlerImpl;
+import com.atyjh.demo.handler.AuthenticationEntryPointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +37,12 @@ public class WebSecurityConfig {
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+    @Autowired
+    private AccessDeniedHandlerImpl accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPointImpl authenticationEntryPoint;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -61,12 +69,14 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/user/login").permitAll()
+                .antMatchers("/user/login").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated();
 
         // 将认证过滤器添加到这个前面
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        // 添加自定义处理登录异常与权限校验异常类
+        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(authenticationEntryPoint);
         return http.build();
     }
 

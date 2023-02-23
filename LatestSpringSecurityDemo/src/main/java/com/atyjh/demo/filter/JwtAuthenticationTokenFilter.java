@@ -62,14 +62,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         // 获取Redis中的用户信息
         String value = redisTemplate.opsForValue().get(LOGIN_KEY + userId);
-        LoginUser loginUser = BeanUtil.toBean(value, LoginUser.class);
+        LoginUser loginUser = JSON.parseObject(value, LoginUser.class);
 
         if (Objects.isNull(loginUser)) {
             throw new RuntimeException("登陆已失效！请重新登录！");
         }
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(loginUser, null, null);
+                new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
 
         // 存入SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

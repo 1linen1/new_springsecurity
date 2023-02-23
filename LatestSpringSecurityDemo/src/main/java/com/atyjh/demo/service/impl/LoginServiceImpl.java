@@ -11,6 +11,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -67,11 +69,36 @@ public class LoginServiceImpl implements ILoginService {
         String token = JwtHelper.createToken(realUser.getId(), realUser.getUsername());
 
         // 存入Redis中
-        redisTemplate.opsForValue().set(LOGIN_KEY + realUser.getId(), JSON.toJSONString(loginUser), 20, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(LOGIN_KEY + realUser.getId(),
+                JSON.toJSONString(loginUser), 30 * 60 * 1000, TimeUnit.SECONDS);
 
         // 组装后返回给前端
         map.put("token", token);
 
-        return Result.success(map);
+        return Result.success(map, "登录成功！");
+    }
+
+    @Override
+    public Result logout() {
+        // 从上下文中获取用户信息
+        SecurityContext context = SecurityContextHolder.getContext();
+        LoginUser loginUser = (LoginUser) context.getAuthentication().getPrincipal();
+        redisTemplate.delete(LOGIN_KEY + loginUser.getUser().getId());
+        return Result.success("退出成功！");
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

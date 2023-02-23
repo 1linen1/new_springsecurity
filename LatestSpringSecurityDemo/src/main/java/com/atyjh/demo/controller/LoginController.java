@@ -4,10 +4,7 @@ import com.atyjh.demo.entity.User;
 import com.atyjh.demo.service.ILoginService;
 import com.atyjh.demo.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Copyright: Copyright(c) 2022 iwhalecloud
@@ -25,16 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
  * @version v1.0.0
  */
 @RestController
-//@RequestMapping("/user")
+@RequestMapping("/user")
 public class LoginController {
 
     @Autowired
     private ILoginService loginService;
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public Result login(@RequestBody User user) {
-        Result login = loginService.login(user);
-        return login;
+        return loginService.login(user);
+    }
+
+    @GetMapping("/logout")
+    public Result logout() {
+        return loginService.logout();
     }
 
 }

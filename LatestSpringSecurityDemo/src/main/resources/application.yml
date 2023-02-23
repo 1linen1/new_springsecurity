@@ -21,6 +21,9 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/**/*.xml #定义mapper文件的路径
+
+
 logging:
   level:
     root: debug

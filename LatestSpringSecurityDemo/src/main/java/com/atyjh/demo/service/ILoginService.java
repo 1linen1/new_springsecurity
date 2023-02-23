@@ -11,4 +11,11 @@ public interface ILoginService {
      * @return
      */
     public Result login(User user);
+
+    /**
+     * 退出登录
+     *
+     * @return
+     */
+    Result logout();
 }
