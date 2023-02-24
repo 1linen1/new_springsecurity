@@ -77,6 +77,8 @@ public class WebSecurityConfig {
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         // 添加自定义处理登录异常与权限校验异常类
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(authenticationEntryPoint);
+        // 允许跨域
+        http.cors();
         return http.build();
     }
 
