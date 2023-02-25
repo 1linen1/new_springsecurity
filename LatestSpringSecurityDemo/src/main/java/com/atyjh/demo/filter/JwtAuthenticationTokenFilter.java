@@ -46,7 +46,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 获取Header中的token
         String token = request.getHeader("token");
-        if (StrUtil.isEmpty(token)) {
+        if (StrUtil.isEmpty(token) || "/user/login".equals(request.getRequestURI())) {
             // 直接放行，让SpringSecurity的其他过滤器报错误
             filterChain.doFilter(request, response);
             return;
